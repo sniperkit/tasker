@@ -7,4 +7,4 @@ A handy tool for streaming perform many tasks
 
 	- none
 
-#### [Example](https://github.com/webdeskltd/tasker/example)
+#### [Example](https://github.com/webdeskltd/tasker/blob/master/example/example.go)
