@@ -11,10 +11,10 @@ import (
 // Run Запуск выполнения задач без ожидания
 // Функция возвращает выполнение после запуска контроллера задач
 func (tsk *implementation) Run() Tasker {
-	var i int
-
 	tsk.Lock()
 	defer tsk.Unlock()
+
+	var i int
 
 	tsk.Err = tsk.CanRun()
 	if tsk.Err != nil {
@@ -53,6 +53,7 @@ func (tsk *implementation) Run() Tasker {
 	tsk.WorkerWG.Add(1)
 	go func(wg *sync.WaitGroup) {
 		defer wg.Done()
+		defer func() { tsk.InWork = false }()
 		tsk.Manager()
 		// Отправка всем сигнала завершения
 		for i := range tsk.WorkerPool {
@@ -96,6 +97,9 @@ func (tsk *implementation) Manager() {
 	var err error
 	var r *result
 	var interrupt bool
+
+	tsk.Lock()
+	defer tsk.Unlock()
 
 	for {
 		// Предварительная обработка всех задач функцией BootstrapFunc
@@ -205,8 +209,6 @@ func (tsk *implementation) SafeCallBootstrapFunc(items []*task) (err error) {
 func (tsk *implementation) PushNextTask() (err error) {
 	var elm *list.Element
 	var item *task
-	tsk.Lock()
-	defer tsk.Unlock()
 
 	for elm = tsk.Tasks.Front(); elm != nil; elm = elm.Next() {
 		if !elm.Value.(*task).InWork && elm.Value.(*task).Prelude {
@@ -228,4 +230,8 @@ func (tsk *implementation) PushNextTask() (err error) {
 
 // IsWork Текущее состояние выполнения задач
 // =true - tasker выполняет задачи, =false - tasker закончил выполнение всех задач, все goroutines навершены
-func (tsk *implementation) IsWork() bool { return tsk.InWork }
+func (tsk *implementation) IsWork() bool {
+	tsk.Lock()
+	defer tsk.Unlock()
+	return tsk.InWork
+}

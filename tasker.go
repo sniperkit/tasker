@@ -33,6 +33,8 @@ func NewTasker() Tasker {
 // Concurrent Number of concurent task
 // Устанавливать и менять значения можно пока только на не запущенном tasker
 func (tsk *implementation) Concurrent(n int) Tasker {
+	tsk.Lock()
+	defer tsk.Unlock()
 	if !tsk.InWork {
 		tsk.ConcurrentProcesses = n
 	}
@@ -40,13 +42,28 @@ func (tsk *implementation) Concurrent(n int) Tasker {
 }
 
 // Bootstrap Установка функции которая будет запущена до начала выполнения задач
-func (tsk *implementation) Bootstrap(fn BootstrapFunc) Tasker { tsk.BootstrapFn = fn; return tsk }
+func (tsk *implementation) Bootstrap(fn BootstrapFunc) Tasker {
+	tsk.Lock()
+	defer tsk.Unlock()
+	tsk.BootstrapFn = fn
+	return tsk
+}
 
 // Worker Установка функции обрабатывающей задачи
-func (tsk *implementation) Worker(fn WorkerFunc) Tasker { tsk.WorkerFn = fn; return tsk }
+func (tsk *implementation) Worker(fn WorkerFunc) Tasker {
+	tsk.Lock()
+	defer tsk.Unlock()
+	tsk.WorkerFn = fn
+	return tsk
+}
 
 // RetryIfError Повторить запуск задачи если Worker вернул ошибку, но не более N раз. По умолчанию не повторять
-func (tsk *implementation) RetryIfError(n int) Tasker { tsk.RetryCount = n; return tsk }
+func (tsk *implementation) RetryIfError(n int) Tasker {
+	tsk.Lock()
+	defer tsk.Unlock()
+	tsk.RetryCount = n
+	return tsk
+}
 
 // AddTasks Добавление среза объектов задач в очередь выполнения
 func (tsk *implementation) AddTasks(tasks []interface{}) (err error) {
@@ -60,6 +77,8 @@ func (tsk *implementation) AddTasks(tasks []interface{}) (err error) {
 
 // AddTask Добавление одного объектов задач в очередь выполнения
 func (tsk *implementation) AddTask(t interface{}) (err error) {
+	tsk.Lock()
+	defer tsk.Unlock()
 	if t == nil {
 		err = fmt.Errorf("Error, task is nil")
 		return
@@ -90,7 +109,6 @@ func (tsk *implementation) Error() error {
 // Функция блокируется до окончания выполнени всех задач
 func (tsk *implementation) Wait() Tasker {
 	tsk.WorkerWG.Wait()
-	tsk.InWork = false
 	return tsk
 }
 

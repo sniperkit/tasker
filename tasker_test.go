@@ -1,3 +1,5 @@
+// +build !race
+
 package tasker // import "github.com/webdeskltd/tasker"
 
 import (
@@ -24,7 +26,7 @@ var TestWorkNotWork WorkNotWork
 
 // generateTasksData Create a test data slice for tasks
 func generateTasksData(consignment string) (t []interface{}) {
-	for i := 0; i < 100; i++ {
+	for i := 0; i < 60; i++ {
 		t = append(t, &Task{
 			TextOnColplete: fmt.Sprintf("task %d[%s]", i, consignment),
 			Sleep:          time.Microsecond,
@@ -48,7 +50,7 @@ func TestFoolProtection(t *testing.T) {
 		}).
 
 		// Десять попыток выполнить задачу в случае если worker вернёт ошибку
-		RetryIfError(100)
+		RetryIfError(2000)
 
 	// Test fool protection
 	if err = tasks.AddTasks([]interface{}{nil}); err == nil {
@@ -85,7 +87,7 @@ func TestFoolProtection(t *testing.T) {
 
 	a := tasks.GetTasksNumber()
 	b := tasks.Clean().GetTasksNumber()
-	if a != 100 || b != 0 {
+	if a != 60 || b != 0 {
 		t.Fatalf("Error in task management")
 	}
 
@@ -115,7 +117,7 @@ func TestTasker(t *testing.T) {
 		Worker(fnTestMainWorker).
 
 		// Попытки выполнить задачу в случае если worker вернёт ошибку
-		RetryIfError(1000)
+		RetryIfError(2000)
 
 	// Проверка как работает IsWork()
 	go func() {
@@ -179,7 +181,7 @@ func TestTasker(t *testing.T) {
 	}
 
 	// Количество поставленных и выполненных задач не совпадёт если исчерпаны попытки выполнения!
-	if doneTask+tasks.GetTasksNumber() != 200 {
+	if doneTask+tasks.GetTasksNumber() != 120 {
 		t.Fatalf("Test failed, loss tasks: done=%d, undone=%d", doneTask, tasks.GetTasksNumber())
 	}
 
