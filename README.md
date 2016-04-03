@@ -9,7 +9,7 @@
 
 A handy tool for streaming perform many tasks
 
-#### Dependences:
+#### Dependencies:
 
 	- none
 
