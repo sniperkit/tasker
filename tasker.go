@@ -35,7 +35,7 @@ func NewTasker() Tasker {
 func (tsk *implementation) Concurrent(n int) Tasker {
 	tsk.Lock()
 	defer tsk.Unlock()
-	if !tsk.InWork {
+	if !tsk.isWork {
 		tsk.ConcurrentProcesses = n
 	}
 	return tsk

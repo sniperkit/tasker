@@ -28,7 +28,7 @@ func (tsk *implementation) Run() Tasker {
 		return tsk
 	}
 
-	tsk.InWork = true
+	tsk.isWork = true
 
 	// Создание работников
 	for i = 0; i < tsk.ConcurrentProcesses; i++ {
@@ -53,7 +53,7 @@ func (tsk *implementation) Run() Tasker {
 	tsk.WorkerWG.Add(1)
 	go func(wg *sync.WaitGroup) {
 		defer wg.Done()
-		defer func() { tsk.InWork = false }()
+		defer func() { tsk.isWork = false }()
 		tsk.Manager()
 		// Отправка всем сигнала завершения
 		for i := range tsk.WorkerPool {
@@ -77,7 +77,7 @@ func (tsk *implementation) CanRun() (err error) {
 	}
 
 	// Таскер не должен быть уже запущенным
-	if tsk.InWork {
+	if tsk.isWork {
 		err = fmt.Errorf("Tasker already running")
 		return
 	}
@@ -231,7 +231,5 @@ func (tsk *implementation) PushNextTask() (err error) {
 // IsWork Текущее состояние выполнения задач
 // =true - tasker выполняет задачи, =false - tasker закончил выполнение всех задач, все goroutines навершены
 func (tsk *implementation) IsWork() bool {
-	tsk.Lock()
-	defer tsk.Unlock()
-	return tsk.InWork
+	return tsk.isWork
 }

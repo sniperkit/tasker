@@ -29,7 +29,7 @@ type implementation struct {
 	BootstrapFn         BootstrapFunc    // Функция предпусковой обработки данных для задач
 	WorkerFn            WorkerFunc       // Функция обрабатывающая задачу
 	Tasks               *list.List       // Список задач/данных ожидающих выполнения/обработки
-	InWork              bool             // =true - tasker запущен и работает, =false - tasker остановлен
+	isWork              bool             // =true - tasker запущен и работает, =false - tasker остановлен
 	ChanIn              chan *task       // Канал задач для воркера
 	ChanOut             chan *result     // Выполненные задачи
 	ChanInterrupt       chan interface{} // Прерывание выполнения задач
