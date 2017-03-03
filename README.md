@@ -1,16 +1,19 @@
 # tasker
----
-
-[![GoDoc](https://godoc.org/github.com/webdeskltd/tasker?status.png)](http://godoc.org/github.com/webdeskltd/tasker)
-[![Coverage Status](https://coveralls.io/repos/webdeskltd/tasker/badge.svg?branch=master&service=github)](https://coveralls.io/github/webdeskltd/tasker?branch=master)
-*nix: [![Build Status](https://drone.io/github.com/webdeskltd/tasker/status.png)](https://drone.io/github.com/webdeskltd/tasker/latest)
-[![Build Status](https://travis-ci.org/webdeskltd/tasker.svg?branch=master)](https://travis-ci.org/webdeskltd/tasker)
-[![Circle CI](https://circleci.com/gh/webdeskltd/tasker.svg?style=svg)](https://circleci.com/gh/webdeskltd/tasker)
-
 A handy tool for streaming perform many tasks
 
-#### Dependencies:
+[![GoDoc](https://godoc.org/github.com/webnice/tasker?status.png)](http://godoc.org/github.com/webnice/tasker)
 
-	- none
+#### Disclaimer
+This library is just a prototype at the moment. **It's not ready for you to use.**
+... work in progress.
 
-[Example](https://github.com/webdeskltd/tasker/blob/master/example/example.go)
+#### Dependencies
+
+	NONE
+
+#### Install
+```bash
+go get gopkg.in/webnice/tasker.v1
+```
+
+#### [Example](https://github.com/webnice/tasker/blob/v1/_example/example.go)

@@ -1,7 +1,7 @@
-package tasker // import "github.com/webdeskltd/tasker"
+package tasker
 
-//import "github.com/webdeskltd/log"
-//import "github.com/webdeskltd/debug"
+//import "gopkg.in/webnice/log.v2"
+//import "gopkg.in/webnice/debug.v1"
 import (
 	"fmt"
 )

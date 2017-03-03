@@ -1,4 +1,4 @@
-package tasker // import "github.com/webdeskltd/tasker"
+package tasker
 
 import (
 	"container/list"

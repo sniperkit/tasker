@@ -1,6 +1,6 @@
 // +build !race
 
-package tasker // import "github.com/webdeskltd/tasker"
+package tasker
 
 import (
 	"fmt"
